@@ -1,20 +1,18 @@
 import { useEffect } from "react";
 import { useGetListData } from "../api/getListData";
-import { Card } from "./Card";
 import { Spinner } from "./Spinner";
 import { useStore } from "../store";
 import { CardListLeading } from "./CardListLeading";
 import { CardList } from "./CardList";
-import { CardListActions } from "./CardListActions";
 import { CardListActionsSection } from "./CardListActionsSection";
 
 export const Entrypoint = () => {
   const {
     cards,
-    revealCards,
     setList,
   } = useStore((state) => state);
   const listQuery = useGetListData();
+  const cardsLength = cards.length;
 
   // TOOD
   // const deletedCards: DeletedListItem[] = [];
@@ -39,7 +37,7 @@ export const Entrypoint = () => {
 
   return (
     <div className="py-32">
-      <CardListLeading cardsLength={cards.length} />
+      <CardListLeading cardsLength={cardsLength} />
 
       <div className="flex flex-1 gap-x-16 rounded-lg py-8 px-8">
         <CardList />

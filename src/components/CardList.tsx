@@ -3,7 +3,7 @@ import { Card } from "./Card";
 
 export const CardList = () => {
   const { cards } = useStore((state) => state);
-  const cardListIsEmpty = cards.length;
+  const cardListIsEmpty = cards.length === 0;
 
   return (
     <>
