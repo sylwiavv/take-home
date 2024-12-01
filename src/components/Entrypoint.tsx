@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
-import { ListItem, useGetListData } from "../api/getListData";
-import { Card } from "./List";
+import { useEffect } from "react";
+import { useGetListData } from "../api/getListData";
+import { Card } from "./Card";
 import { Spinner } from "./Spinner";
+import { useStore } from "../store";
 
 export const Entrypoint = () => {
-  const [visibleCards, setVisibleCards] = useState<ListItem[]>([]);
+  const {cards, setList} = useStore((state) => state);
+
   const listQuery = useGetListData();
 
   // TOOD
@@ -15,47 +17,64 @@ export const Entrypoint = () => {
       return;
     }
 
-    setVisibleCards(listQuery.data?.filter((item) => item.isVisible) ?? []);
+    const visibleCards = listQuery.data?.filter((item) => item.isVisible) ?? [];
+
+    setList(visibleCards)
+
   }, [listQuery.data, listQuery.isLoading]);
 
   if (listQuery.isLoading) {
-    return <Spinner />;
+    return (
+      <div className="flex justify-center items-center bg-white h-screen w-screen">
+        <Spinner />
+      </div>
+    );
   }
 
   return (
-    <div className="flex gap-x-16">
-      <div className="w-full max-w-xl">
-        <h1 className="mb-1 font-medium text-lg">My Awesome List ({visibleCards.length})</h1>
-        <div className="flex flex-col gap-y-3">
-          {visibleCards.map((card) => (
-            <Card key={card.id} title={card.title} description={card.description} />
-          ))}
-        </div>
+    <div className="py-32">
+      <div className="py-10 px-5 mb-10">
+        <h1 className="font-extrabold text-5xl uppercase tracking-wide">
+          My Awesome List ({cards.length})
+          {cards.length > 1 ? "items" : "item"}
+        </h1>
       </div>
-      <div className="w-full max-w-xl">
-        <div className="flex items-center justify-between">
-          <h1 className="mb-1 font-medium text-lg">Deleted Cards (0)</h1>
 
-          <div className="flex items-center justify-between gap-2">
-          <button
-            // disabled
-            className="text-white text-sm transition-colors hover:bg-gray-800 disabled:bg-black/75 bg-gray-700 rounded px-3 py-1"
-          >
-            Reveal
-          </button>         
-           <button
-            // disabled
-            className="text-white text-sm transition-colors hover:bg-green-800 disabled:bg-green-800/75 bg-green-700 rounded px-3 py-1"
-          >
-            Refresh
-          </button>
+      <div className="flex flex-1 gap-x-16 rounded-lg py-8 px-8">
+        {cards.length === 0 && (
+          <div><p>The list is empty.</p></div>
+        )}
+          <div className="flex flex-col gap-y-4 max-w-[320px]">
+            {cards.map(({ id, title, description }) => (
+              <Card key={id} id={id} title={title} description={description} />
+            ))}
           </div>
 
-        </div>
-        <div className="flex flex-col gap-y-3">
-          {/* {deletedCards.map((card) => (
+
+        <div className="flex-1">
+          <div className="flex items-center justify-between">
+            <p className="mb-1 font-medium text-lg">Deleted Cards (0)</p>
+
+            <div className="flex items-center justify-between gap-2">
+              <button
+                // disabled
+                className="text-white text-sm transition-colors hover:bg-gray-800 disabled:bg-black/75 bg-gray-700 rounded px-3 py-1"
+              >
+                Reveal
+              </button>
+              <button
+                // disabled
+                className="text-white text-sm transition-colors hover:bg-green-800 disabled:bg-green-800/75 bg-green-700 rounded px-3 py-1"
+              >
+                Refresh
+              </button>
+            </div>
+          </div>
+          <div className="flex flex-col gap-y-3">
+            {/* {deletedCards.map((card) => (
             <Card key={card.id} card={card} />
           ))} */}
+          </div>
         </div>
       </div>
     </div>
