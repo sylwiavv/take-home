@@ -4,6 +4,7 @@ import { ListItem } from "./api/getListData";
 type State = {
   cards: ListItem[];
   expandedCardIds: number[];
+  deletedCardsIds: number[];
 };
 
 type Actions = {
@@ -16,6 +17,7 @@ type Actions = {
 export const useStore = create<State & Actions>((set) => ({
   cards: [],
   expandedCardIds: [],
+  deletedCardsIds: [],
 
   setList: (list) => set({ cards: list }),
 
@@ -28,7 +30,8 @@ export const useStore = create<State & Actions>((set) => ({
 
   deleteCard: (id) =>
     set((state) => ({
-      cards: state.cards.filter((card) => card.id !== id), // Porównujemy id karty z przekazanym id
-      expandedCardIds: state.expandedCardIds.filter((cardId) => cardId !== id), // Usuwamy również z expandedCardIds
+      cards: state.cards.filter((card) => card.id !== id),
+
+      deletedCardsIds: [...state.deletedCardsIds, id]
     }))
 }));

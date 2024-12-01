@@ -5,8 +5,7 @@ import { Spinner } from "./Spinner";
 import { useStore } from "../store";
 
 export const Entrypoint = () => {
-  const {cards, setList} = useStore((state) => state);
-
+  const { cards, deletedCardsIds, setList } = useStore((state) => state);
   const listQuery = useGetListData();
 
   // TOOD
@@ -19,8 +18,7 @@ export const Entrypoint = () => {
 
     const visibleCards = listQuery.data?.filter((item) => item.isVisible) ?? [];
 
-    setList(visibleCards)
-
+    setList(visibleCards);
   }, [listQuery.data, listQuery.isLoading]);
 
   if (listQuery.isLoading) {
@@ -35,25 +33,32 @@ export const Entrypoint = () => {
     <div className="py-32">
       <div className="py-10 px-5 mb-10">
         <h1 className="font-extrabold text-5xl uppercase tracking-wide">
-          My Awesome List ({cards.length})
-          {cards.length > 1 ? "items" : "item"}
+          My Awesome List
+          {cards.length !== 0 && (
+            <>
+              ({cards.length}){cards.length > 1 ? " items" : " item"}
+            </>
+          )}
         </h1>
       </div>
 
       <div className="flex flex-1 gap-x-16 rounded-lg py-8 px-8">
         {cards.length === 0 && (
-          <div><p>The list is empty.</p></div>
-        )}
-          <div className="flex flex-col gap-y-4 max-w-[320px]">
-            {cards.map(({ id, title, description }) => (
-              <Card key={id} id={id} title={title} description={description} />
-            ))}
+          <div>
+            <p>The list is empty.</p>
           </div>
-
+        )}
+        <div className="flex flex-col gap-y-4 max-w-[320px]">
+          {cards.map(({ id, title, description }) => (
+            <Card key={id} id={id} title={title} description={description} />
+          ))}
+        </div>
 
         <div className="flex-1">
           <div className="flex items-center justify-between">
-            <p className="mb-1 font-medium text-lg">Deleted Cards (0)</p>
+            <p className="mb-1 font-medium text-lg">
+              Deleted Cards ({deletedCardsIds.length})
+            </p>
 
             <div className="flex items-center justify-between gap-2">
               <button

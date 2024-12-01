@@ -20,7 +20,7 @@ export const useGetListData = () => {
       await sleep(1000);
 
       if (getRandom() > 85) {
-        console.error("An unexpected error occurred!");
+        console.error("An unexpected error occurred! 👀");
         throw new Error("👀");
       }
 
