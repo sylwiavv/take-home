@@ -1,18 +1,15 @@
 import { ToggleButton } from "./ToggleButton";
-import { useStore } from "../store";
+import { useStore, useRevealCardsStore } from "../store";
 
 export const CardListActions = () => {
-  const {
-    deletedCardsIds,
-    deletedCards,
+  const { deletedCardsIds, deletedCards } = useStore((state) => state);
+  const { revealCards, setRevealCards } = useRevealCardsStore((state) => state);
 
-    setRevealCards,
-  } = useStore((state) => state);
   return (
     <>
       <div className="flex items-center justify-between">
         <p className="mb-1 font-medium text-lg">
-          Deleted Cards ({deletedCardsIds.length})
+          Deleted Cards ({revealCards.length})
         </p>
 
         <div className="flex items-center justify-between gap-2">

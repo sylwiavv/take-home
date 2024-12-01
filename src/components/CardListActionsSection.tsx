@@ -1,9 +1,9 @@
 import { CardListActions } from "./CardListActions";
-import { useStore } from "../store";
+import { useRevealCardsStore } from "../store";
 import { Card } from "./Card";
 
 export const CardListActionsSection = () => {
-  const { revealCards } = useStore((state) => state);
+  const { revealCards } = useRevealCardsStore((state) => state);
 
   return (
     <div className="flex-1">

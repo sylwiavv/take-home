@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+
 import { ListItem } from "./api/getListData";
 
 type State = {
@@ -6,7 +8,7 @@ type State = {
   expandedCardIds: number[];
   deletedCardsIds: number[];
   deletedCards: Omit<ListItem, "isVisible" | "description">[];
-  revealCards: Omit<ListItem, "isVisible" | "description">[];
+  // revealCards: Omit<ListItem, "isVisible" | "description">[];
 };
 
 type Actions = {
@@ -14,8 +16,17 @@ type Actions = {
   toggleCard: (id: number) => void;
   // deleteCard: (id:ListItem['id']) => void;
   deleteCard: (id: number) => void;
-  setRevealCards: (cards: Omit<ListItem, "isVisible" | "description">[]) => void
+  // setRevealCards: (cards: Omit<ListItem, "isVisible" | "description">[]) => void
 };
+
+type RevealCardsState = {
+  revealCards: Omit<ListItem, "isVisible" | "description">[];
+
+}
+
+type RevealCardsAction = {
+  setRevealCards: (cards: Omit<ListItem, "isVisible" | "description">[]) => void
+}
 
 export const useStore = create<State & Actions>((set) => ({
   cards: [],
@@ -46,10 +57,27 @@ export const useStore = create<State & Actions>((set) => ({
 
         deletedCardsIds: [...state.deletedCardsIds, id],
       };
-    }),
-
-  setRevealCards: (cards) =>
-    set(() => ({
-      revealCards: [...cards]
-    }))
+    })
 }));
+
+export const useRevealCardsStore = create<RevealCardsState & RevealCardsAction>()(
+  persist(
+    (set) => ({
+      revealCards: [],
+
+      setRevealCards: (newCards) =>
+        set((state) => {
+          const uniqueCards = newCards.filter(
+            (newCard) => !state.revealCards.some((existingCard) => existingCard.id === newCard.id)
+          );
+
+          return {
+            revealCards: [...state.revealCards, ...uniqueCards],
+          };
+        }),
+    }),
+    {
+      name: "reveal-cards-storage"
+    }
+  )
+);
