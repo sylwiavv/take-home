@@ -3,11 +3,12 @@ import { useGetListData } from "../api/getListData";
 import { Card } from "./Card";
 import { Spinner } from "./Spinner";
 import { useStore } from "../store";
+import { ToggleButton } from "./ToggleButton";
 
 export const Entrypoint = () => {
   const { cards, deletedCardsIds, deletedCards, revealCards, setList, setRevealCards } = useStore(
     (state) => state
-  );
+);
   const listQuery = useGetListData();
 
   // TOOD
@@ -65,19 +66,10 @@ export const Entrypoint = () => {
             </p>
 
             <div className="flex items-center justify-between gap-2">
-              <button
-                disabled={deletedCards.length <= 0}
-                className="text-white text-sm transition-colors hover:bg-gray-800 disabled:bg-black/75 bg-gray-700 rounded px-3 py-1"
-                onClick={() => setRevealCards(deletedCards)}
-              >
-                Reveal
-              </button>
-              <button
-                // disabled
-                className="text-white text-sm transition-colors hover:bg-green-800 disabled:bg-green-800/75 bg-green-700 rounded px-3 py-1"
-              >
-                Refresh
-              </button>
+              <ToggleButton className={"hover:bg-gray-800 disabled:bg-black/75 bg-gray-700"} disabled={deletedCards.length <= 0} onClick={() => setRevealCards(deletedCards)} buttonText={"Reveal"} />
+  
+
+              <ToggleButton className={"hover:bg-green-800 disabled:bg-green-800/75 bg-green-700"} disabled={deletedCards.length <= 0} onClick={() => setRevealCards(deletedCards)} buttonText={"Refresh"} />
             </div>
           </div>
 
