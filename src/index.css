@@ -53,6 +53,10 @@
   width: 100%;
 }
 
+:root {
+  --main-color: #fbfbfb;
+}
+
 body {
   background-color: var(--main-color);
   color: var(--font-color);

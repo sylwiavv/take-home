@@ -5,6 +5,8 @@ type State = {
   cards: ListItem[];
   expandedCardIds: number[];
   deletedCardsIds: number[];
+  deletedCards: Omit<ListItem, "isVisible" | "description">[];
+  revealCards: Omit<ListItem, "isVisible" | "description">[];
 };
 
 type Actions = {
@@ -12,12 +14,15 @@ type Actions = {
   toggleCard: (id: number) => void;
   // deleteCard: (id:ListItem['id']) => void;
   deleteCard: (id: number) => void;
+  setRevealCards: (cards: Omit<ListItem, "isVisible" | "description">[]) => void
 };
 
 export const useStore = create<State & Actions>((set) => ({
   cards: [],
   expandedCardIds: [],
   deletedCardsIds: [],
+  deletedCards: [],
+  revealCards: [],
 
   setList: (list) => set({ cards: list }),
 
@@ -29,9 +34,22 @@ export const useStore = create<State & Actions>((set) => ({
     })),
 
   deleteCard: (id) =>
-    set((state) => ({
-      cards: state.cards.filter((card) => card.id !== id),
+    set((state) => {
+      const deletedCard = state.cards.find((card) => card.id === id);
 
-      deletedCardsIds: [...state.deletedCardsIds, id]
+      return {
+        deletedCards: deletedCard
+          ? [...state.deletedCards, { id: deletedCard.id, title: deletedCard.title }]
+          : state.deletedCards,
+
+        cards: state.cards.filter((card) => card.id !== id),
+
+        deletedCardsIds: [...state.deletedCardsIds, id],
+      };
+    }),
+
+  setRevealCards: (cards) =>
+    set(() => ({
+      revealCards: [...cards]
     }))
 }));

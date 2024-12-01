@@ -1,11 +1,13 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useGetListData } from "../api/getListData";
 import { Card } from "./Card";
 import { Spinner } from "./Spinner";
 import { useStore } from "../store";
 
 export const Entrypoint = () => {
-  const { cards, deletedCardsIds, setList } = useStore((state) => state);
+  const { cards, deletedCardsIds, deletedCards, revealCards, setList, setRevealCards } = useStore(
+    (state) => state
+  );
   const listQuery = useGetListData();
 
   // TOOD
@@ -20,6 +22,7 @@ export const Entrypoint = () => {
 
     setList(visibleCards);
   }, [listQuery.data, listQuery.isLoading]);
+
 
   if (listQuery.isLoading) {
     return (
@@ -48,6 +51,7 @@ export const Entrypoint = () => {
             <p>The list is empty.</p>
           </div>
         )}
+
         <div className="flex flex-col gap-y-4 max-w-[320px]">
           {cards.map(({ id, title, description }) => (
             <Card key={id} id={id} title={title} description={description} />
@@ -62,8 +66,9 @@ export const Entrypoint = () => {
 
             <div className="flex items-center justify-between gap-2">
               <button
-                // disabled
+                disabled={deletedCards.length <= 0}
                 className="text-white text-sm transition-colors hover:bg-gray-800 disabled:bg-black/75 bg-gray-700 rounded px-3 py-1"
+                onClick={() => setRevealCards(deletedCards)}
               >
                 Reveal
               </button>
@@ -75,6 +80,14 @@ export const Entrypoint = () => {
               </button>
             </div>
           </div>
+
+            <div className="flex flex-col gap-y-4 max-w-[320px]">
+              {revealCards.map(({id, title}) => (
+                <Card key={id} id={id} title={title} isRevealCard={true} />
+              ))}
+            </div>
+        
+
           <div className="flex flex-col gap-y-3">
             {/* {deletedCards.map((card) => (
             <Card key={card.id} card={card} />
