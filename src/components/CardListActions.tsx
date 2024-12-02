@@ -1,11 +1,12 @@
 import { ToggleButton } from "./ToggleButton";
-import { useStore, useRevealCardsStore, useExpandedCardsStore } from "../store";
+import { useStore, useRevealCardsStore, useExpandedCardsStore, useDeletedCardsStore } from "../store";
 import { useGetListData } from "../api/getListData";
 import { ListItem } from "../api/getListData";
 
 export const CardListActions = () => {
-  const { deletedCardsIds, deletedCards, refreshState } = useStore((state) => state);
+  const { refreshState } = useStore((state) => state);
   const { setRevealCards, resetRevealCards } = useRevealCardsStore((state) => state);
+  const { deletedCards, resetDeletedCards } = useDeletedCardsStore();
   const { resetExpandedCards} = useExpandedCardsStore()
   const { data: cardsList } = useGetListData();
 
@@ -14,12 +15,14 @@ export const CardListActions = () => {
 
     resetExpandedCards();
     resetRevealCards();
+    resetDeletedCards()
   };  
+
     return (
     <>
       <div className="flex items-center justify-between">
         <p className="mb-1 font-medium text-lg">
-          Deleted Cards ({deletedCardsIds.length})
+          Deleted Cards ({deletedCards.length})
         </p>
 
         <div className="flex items-center justify-between gap-2">

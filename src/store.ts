@@ -2,19 +2,14 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { ListItem } from "./api/getListData";
-import { ExpandedCardsIdStorage, RevealCardsStorage } from "./ulits/constans";
+import { DeletedCardsStorage, ExpandedCardsIdStorage, RevealCardsStorage } from "./ulits/constans";
 
 type State = {
   cards: ListItem[];
-  expandedCardIds: ListItem["id"][];
-  deletedCardsIds: ListItem["id"][];
-  deletedCards: Omit<ListItem, "isVisible" | "description">[];
 };
 
 type Actions = {
   setList: (list: ListItem[]) => void;
-  deleteCard: (id: ListItem["id"]) => void;
-  setDeletedCardsIds: (id: ListItem["id"][]) => void;
   refreshState: (newCards: ListItem[]) => void;
 };
 
@@ -36,35 +31,22 @@ type ExpandedCardAction = {
   resetExpandedCards: () => void;
 };
 
+type DeletedCardsState = {
+  deletedCards: Omit<ListItem, "isVisible" | "description">[];
+  deletedCardsIds: ListItem["id"][];
+};
+
+type DeletedCardsActions = {
+  deleteCard: (id: ListItem["id"]) => void;
+  resetDeletedCards: () => void;
+};
+
 
 export const useStore = create<State & Actions>((set) => ({
   cards: [],
-  expandedCardIds: [],
-  deletedCardsIds: [],
-  deletedCards: [],
   revealCards: [],
 
   setList: (list) => set({ cards: list }),
-
-  deleteCard: (id) =>
-    set((state) => {
-      const deletedCard = state.cards.find((card) => card.id === id);
-
-      return {
-        deletedCards: deletedCard
-          ? [...state.deletedCards, { id: deletedCard.id, title: deletedCard.title }]
-          : state.deletedCards,
-
-        cards: state.cards.filter((card) => card.id !== id),
-
-        deletedCardsIds: [...state.deletedCardsIds, id],
-      };
-    }),
-
-  setDeletedCardsIds: (cardListItemsId) =>
-    set((state) => ({
-      deletedCardsIds: [...cardListItemsId, ...state.deletedCardsIds]
-    })),
 
   refreshState: (newCards) =>
     set(() => {
@@ -73,10 +55,6 @@ export const useStore = create<State & Actions>((set) => ({
 
       return {
         cards: newCards,
-        deletedCardsIds: [],
-        expandedCardIds: [],
-        deletedCards: [],
-        revealCards: []
       }
     }),
 }));
@@ -96,21 +74,11 @@ export const useRevealCardsStore = create<RevealCardsState & RevealCardsAction>(
             revealCards: [...state.revealCards, ...uniqueCards],
           };
         }),
+        
         resetRevealCards: () => set(() => ({ revealCards: [] })),
     }),
     {
-      name: "reveal-cards-storage",
-
-      onRehydrateStorage: () => (persistedState, error) => {
-        if (error) {
-          throw new Error(`Rehydration error: ${error instanceof Error ? error.message : String(error)}`);
-        } else {
-          if (persistedState?.revealCards) {
-            const deletedCardsIds = persistedState.revealCards.map((card) => card.id);
-            useStore.getState().setDeletedCardsIds([...deletedCardsIds]);
-          }
-        }
-      },
+      name: RevealCardsStorage
     },
   )
 );
@@ -132,6 +100,44 @@ export const useExpandedCardsStore = create<ExpandedCardState & ExpandedCardActi
     }),
     {
       name: ExpandedCardsIdStorage
+    }
+  )
+);
+
+
+export const useDeletedCardsStore = create<DeletedCardsState & DeletedCardsActions>()(
+  persist(
+    (set) => ({
+      deletedCards: [],
+      deletedCardsIds: [],
+
+      deleteCard: (id) => {
+        const store = useStore.getState();
+
+        set((state) => {
+          const cardToDelete = store.cards.find((card) => card.id === id);
+  
+          if (!cardToDelete) {
+            return state;
+          }
+
+          store.setList(store.cards.filter((card) => card.id !== id));
+
+          return {
+            deletedCards: [...state.deletedCards, { id: cardToDelete.id, title: cardToDelete.title }],
+            deletedCardsIds: [...state.deletedCardsIds, cardToDelete.id],
+          };
+        });
+      },
+
+      resetDeletedCards: () =>
+        set(() => ({
+          deletedCards: [],
+          deletedCardsIds: [],
+        })),
+    }),
+    {
+      name: DeletedCardsStorage,
     }
   )
 );

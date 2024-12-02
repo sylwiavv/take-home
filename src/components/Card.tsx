@@ -1,6 +1,10 @@
-import { FC } from "react";
+import { FC, useCallback, useState } from "react";
 import { ListItem } from "../api/getListData";
-import { useExpandedCardsStore, useStore } from "../store";
+import {
+  useExpandedCardsStore,
+  useDeletedCardsStore,
+  useStore,
+} from "../store";
 import { DeleteButton, ExpandButton } from "./Buttons";
 import { ChevronDownIcon, ChevronUpIcon } from "./icons";
 
@@ -17,11 +21,11 @@ export const Card: FC<CardProps> = ({
   description,
   isRevealCard = false,
 }) => {
-  const { deleteCard } = useStore();
+  const { deleteCard } = useDeletedCardsStore();
 
   const { expandedCardIds, toggleExpandedCard } = useExpandedCardsStore();
 
-  const isExpanded = expandedCardIds.includes(id) ;
+  const isExpanded = expandedCardIds.includes(id);
 
   const deleteCardOnClick = (id: ListItem["id"]) => {
     deleteCard(id);

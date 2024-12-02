@@ -14,9 +14,6 @@ export const Entrypoint = () => {
   const listQuery = useGetListData();
   const cardsLength = cards.length;
 
-  // TOOD
-  // const deletedCards: DeletedListItem[] = [];
-
   useEffect(() => {
     if (listQuery.isLoading) {
       return;
