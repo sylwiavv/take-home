@@ -30,7 +30,7 @@ export const Entrypoint = () => {
   }
 
   return (
-    <div className="py-32">
+    <div className="py-32 max-w-screen-lg">
       <CardListLeading />
 
       <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4 rounded-lg py-8">

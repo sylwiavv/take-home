@@ -62,3 +62,7 @@ body {
   background-color: var(--main-color);
   color: var(--font-color);
 }
+
+.test {
+  animation-delay: 2s!important;
+}

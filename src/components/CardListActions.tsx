@@ -29,12 +29,12 @@ export const CardListActions = () => {
   return (
     <>
       <div className="flex flex-col">
-        <div className="flex w-full justify-between">
+        <div className="flex w-full justify-between flex-col md:flex-row gap-2">
           <p className="mr-4 text-[#a1b0bd]">List actions</p>
 
           <div className="flex gap-2 mb-5">
             <ToggleButton
-              className={"hover:bg-gray-800 disabled:bg-black/75 bg-gray-700"}
+              className={"hover:bg-gray-900 disabled:bg-black/75 bg-gray-900"}
               disabled={deletedCards.length <= 0}
               onClick={() => setRevealCards(deletedCards)}
               buttonText={"Reveal"}
