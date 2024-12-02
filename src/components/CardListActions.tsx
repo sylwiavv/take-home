@@ -1,11 +1,20 @@
 import { ToggleButton } from "./ToggleButton";
-import { useStore, useRevealCardsStore } from "../store";
+import { useStore, useRevealCardsStore, useExpandedCardsStore } from "../store";
+import { useGetListData } from "../api/getListData";
+import { ListItem } from "../api/getListData";
 
 export const CardListActions = () => {
-  const { deletedCardsIds, deletedCards } = useStore((state) => state);
+  const { deletedCardsIds, deletedCards, refreshState, cards } = useStore((state) => state);
   const { setRevealCards } = useRevealCardsStore((state) => state);
+  const { resetExpandedCards} = useExpandedCardsStore()
+  const { data: cardsList } = useGetListData();
 
-  return (
+  const resetState = () => {
+    refreshState(cardsList as ListItem[]);
+
+    resetExpandedCards();
+  };  
+    return (
     <>
       <div className="flex items-center justify-between">
         <p className="mb-1 font-medium text-lg">
@@ -24,8 +33,7 @@ export const CardListActions = () => {
             className={
               "hover:bg-green-800 disabled:bg-green-800/75 bg-green-700"
             }
-            disabled={deletedCards.length <= 0}
-            onClick={() => setRevealCards(deletedCards)}
+            onClick={resetState}
             buttonText={"Refresh"}
           />
         </div>

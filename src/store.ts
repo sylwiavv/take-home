@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { ListItem } from "./api/getListData";
+import { ExpandedCardsIdStorage, RevealCardsStorage } from "./ulits/constans";
 
 type State = {
   cards: ListItem[];
@@ -14,6 +15,7 @@ type Actions = {
   setList: (list: ListItem[]) => void;
   deleteCard: (id: ListItem["id"]) => void;
   setDeletedCardsIds: (id: ListItem["id"][]) => void
+  refreshState: (newCards: ListItem[]) => void
 };
 
 type RevealCardsState = {
@@ -30,6 +32,7 @@ type ExpandedCardState = {
 
 type ExpandedCardAction = {
   toggleExpandedCard: (id: ListItem["id"]) => void;
+  resetExpandedCards: () => void
 };
 
 
@@ -60,7 +63,20 @@ export const useStore = create<State & Actions>((set) => ({
   setDeletedCardsIds: (cardListItemsId) =>
     set((state) => ({
       deletedCardsIds: [...cardListItemsId, ...state.deletedCardsIds]
-    }))
+    })),
+
+  refreshState: (newCards) =>
+    set(() => {
+      localStorage.removeItem(RevealCardsStorage);
+      localStorage.removeItem(ExpandedCardsIdStorage);
+
+      return {
+        cards: newCards,
+        deletedCardsIds: [],
+        expandedCardIds: [],
+        revealCards: []
+      }
+    }),
 }));
 
 export const useRevealCardsStore = create<RevealCardsState & RevealCardsAction>()(
@@ -79,7 +95,7 @@ export const useRevealCardsStore = create<RevealCardsState & RevealCardsAction>(
         }),
     }),
     {
-      name: "reveal-cards-storage",
+      name: RevealCardsStorage,
 
       onRehydrateStorage: () => (persistedState, error) => {
         if (error) {
@@ -92,7 +108,6 @@ export const useRevealCardsStore = create<RevealCardsState & RevealCardsAction>(
         }
       },
     },
-
   )
 );
 
@@ -101,15 +116,18 @@ export const useExpandedCardsStore = create<ExpandedCardState & ExpandedCardActi
   persist(
     (set) => ({
       expandedCardIds: [],
+
       toggleExpandedCard: (id) =>
         set((state) => ({
           expandedCardIds: state.expandedCardIds.includes(id)
             ? state.expandedCardIds.filter((cardId) => cardId !== id)
             : [...state.expandedCardIds, id],
         })),
+
+      resetExpandedCards: () => set(() => ({ expandedCardIds: [] })),
     }),
     {
-      name: "expanded-cards-id-storage"
+      name: ExpandedCardsIdStorage
     }
   )
 );

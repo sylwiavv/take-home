@@ -21,7 +21,7 @@ export const Card: FC<CardProps> = ({
 
   const { expandedCardIds, toggleExpandedCard } = useExpandedCardsStore();
 
-  const isExpanded = expandedCardIds.includes(id);
+  const isExpanded = expandedCardIds.includes(id) ;
 
   const deleteCardOnClick = (id: ListItem["id"]) => {
     deleteCard(id);
