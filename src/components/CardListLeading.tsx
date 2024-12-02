@@ -1,15 +1,9 @@
-export const CardListLeading = ({ cardsLength }: { cardsLength: number }) => {
-  const cardListIsEmpty = cardsLength === 0;
+export const CardListLeading = () => {
 
   return (
-    <div className="py-10 px-5 mb-10">
-      <h1 className="font-extrabold text-5xl uppercase tracking-wide">
+    <div className="pb-2 px-5">
+      <h1 className="font-extrabold text-5xl tracking-wide">
         My Awesome List
-        {!cardListIsEmpty && (
-          <>
-            ({cardsLength}){cardsLength > 1 ? " items" : " item"}
-          </>
-        )}
       </h1>
     </div>
   );

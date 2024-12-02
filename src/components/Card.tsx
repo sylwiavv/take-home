@@ -32,14 +32,17 @@ export const Card: FC<CardProps> = ({
   };
 
   return (
-    <div className={`rounded px-3 py-2 custom-box-shadow w-full max-w-[400px]`}>
-      {id}
+    <div
+      className={`rounded-3xl px-6 py-8 custom-box-shadow ${
+        isExpanded ? "bg-[#2f2ea6]" : "bg-[#1a212a]"
+      } text-[#eef4fb] ${!isRevealCard && "border-solid border border-[#f0f8ff33]"} ${isRevealCard && "bg-[#2a303a]"}`}
+    >
       <div className="flex justify-between">
-        <h2 className="font-large font-semibold mr-2">{title}</h2>
+        <h2 className="text-lg font-semibold mr-2">{title}</h2>
 
         {!isRevealCard && (
-          <div className="flex items-center gap-1">
-            <ExpandButton onClick={() => toggleExpandedCard(id)}>
+          <div className={`flex items-center gap-1`}>
+            <ExpandButton className="text-[#eed414] rounded-xl" onClick={() => toggleExpandedCard(id)}>
               {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
             </ExpandButton>
 
@@ -47,7 +50,7 @@ export const Card: FC<CardProps> = ({
           </div>
         )}
       </div>
-      {isExpanded && <p className={`mt-1.5`}>{description}</p>}
+      {isExpanded && <p className={`mt-1.5 text-[#c2c1e1]`}>{description}</p>}
     </div>
   );
 };

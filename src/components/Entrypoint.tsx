@@ -7,12 +7,9 @@ import { CardList } from "./CardList";
 import { CardListActionsSection } from "./CardListActionsSection";
 
 export const Entrypoint = () => {
-  const {
-    cards,
-    setList,
-  } = useStore((state) => state);
+  const { setList } = useStore((state) => state);
+
   const listQuery = useGetListData();
-  const cardsLength = cards.length;
 
   useEffect(() => {
     if (listQuery.isLoading) {
@@ -34,9 +31,9 @@ export const Entrypoint = () => {
 
   return (
     <div className="py-32">
-      <CardListLeading cardsLength={cardsLength} />
+      <CardListLeading />
 
-      <div className="flex flex-1 gap-x-16 rounded-lg py-8 px-8">
+      <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4 rounded-lg py-8">
         <CardList />
 
         <CardListActionsSection />

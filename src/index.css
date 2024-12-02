@@ -54,7 +54,8 @@
 }
 
 :root {
-  --main-color: #fbfbfb;
+  --main-color: #1b232f;
+  --font-color: #fefdfe;
 }
 
 body {
