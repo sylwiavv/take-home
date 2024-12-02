@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { useGetListData } from "../api/getListData";
-import { Spinner } from "./Spinner";
-import { useStore } from "../store";
-import { CardListLeading } from "./CardListLeading";
-import { CardList } from "./CardList";
-import { CardListActionsSection } from "./CardListActionsSection";
+import { useGetListData } from "../../api/getListData";
+import { Spinner } from "../atoms/Spinner";
+import { useStore } from "../../store";
+import { CardListLeading } from "../atoms/CardListLeading";
+import { CardList } from "../molecues/CardList";
+import { CardListActionsSection } from "../organism/CardListActionsSection";
 
 export const Entrypoint = () => {
   const { setList } = useStore((state) => state);

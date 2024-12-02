@@ -1,6 +1,6 @@
-import { useStore } from "../store";
+import { useStore } from "../../store";
 import { Card } from "./Card";
-import { ListDetails } from "./ListDetails";
+import { ListDetails } from "../atoms/ListDetails";
 
 export const CardList = () => {
   const { cards } = useStore((state) => state);

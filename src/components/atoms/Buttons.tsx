@@ -1,10 +1,9 @@
 import { FC } from "react";
-import { XMarkIcon } from "./icons";
+import { XMarkIcon } from "../../icons/icons"
 
 type ButtonProps = React.ComponentProps<"button">;
 
 export const ExpandButton: FC<ButtonProps> = ({ children, ...props }) => {
-  console.log(props.className)
   return (
     <button className={`transition-colors flex items-center justify-center ${props.className}`} {...props}>
       {children}

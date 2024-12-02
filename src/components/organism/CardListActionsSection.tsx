@@ -1,6 +1,6 @@
-import { CardListActions } from "./CardListActions";
-import { useRevealCardsStore } from "../store";
-import { Card } from "./Card";
+import { CardListActions } from "../molecues/CardListActions";
+import { useRevealCardsStore } from "../../store";
+import { Card } from "../molecues/Card";
 
 export const CardListActionsSection = () => {
   const { revealCards } = useRevealCardsStore((state) => state);

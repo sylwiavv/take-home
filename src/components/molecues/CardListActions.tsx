@@ -1,13 +1,13 @@
-import { ToggleButton } from "./ToggleButton";
+import { ToggleButton } from "../atoms/ToggleButton";
 import {
   useStore,
   useRevealCardsStore,
   useExpandedCardsStore,
   useDeletedCardsStore,
-} from "../store";
-import { useGetListData } from "../api/getListData";
-import { ListItem } from "../api/getListData";
-import { ListDetails } from "./ListDetails";
+} from "../../store";
+import { useGetListData } from "../../api/getListData";
+import { ListItem } from "../../api/getListData";
+import { ListDetails } from "../atoms/ListDetails";
 
 export const CardListActions = () => {
   const { refreshState } = useStore((state) => state);
@@ -28,7 +28,7 @@ export const CardListActions = () => {
 
   return (
     <>
-      <div className="flex flex-col">
+      <div className="flex flex-col ">
         <div className="flex w-full justify-between flex-col md:flex-row gap-2">
           <p className="mr-4 text-[#a1b0bd]">List actions</p>
 
@@ -41,7 +41,7 @@ export const CardListActions = () => {
             />
             <ToggleButton
               className={
-                "hover:bg-green-800 disabled:bg-green-800/75 bg-green-700"
+                "hover:bg-green-800 disabled:bg-green-800/75 bg-green-700 hover:scale-90"
               }
               onClick={resetState}
               buttonText={"Refresh"}
