@@ -12,19 +12,26 @@ type State = {
 
 type Actions = {
   setList: (list: ListItem[]) => void;
-  toggleCard: (id: ListItem["id"]) => void;
   deleteCard: (id: ListItem["id"]) => void;
-  setDeletedCardsIds: (id:ListItem["id"][]) => void
+  setDeletedCardsIds: (id: ListItem["id"][]) => void
 };
 
 type RevealCardsState = {
   revealCards: Omit<ListItem, "isVisible" | "description">[];
-
 }
 
 type RevealCardsAction = {
   setRevealCards: (cards: Omit<ListItem, "isVisible" | "description">[]) => void
 }
+
+type ExpandedCardState = {
+  expandedCardIds: ListItem["id"][];
+};
+
+type ExpandedCardAction = {
+  toggleExpandedCard: (id: ListItem["id"]) => void;
+};
+
 
 export const useStore = create<State & Actions>((set) => ({
   cards: [],
@@ -34,13 +41,6 @@ export const useStore = create<State & Actions>((set) => ({
   revealCards: [],
 
   setList: (list) => set({ cards: list }),
-
-  toggleCard: (id) =>
-    set((state) => ({
-      expandedCardIds: state.expandedCardIds.includes(id)
-        ? state.expandedCardIds.filter((cardId) => cardId !== id)
-        : [...state.expandedCardIds, id],
-    })),
 
   deleteCard: (id) =>
     set((state) => {
@@ -91,6 +91,25 @@ export const useRevealCardsStore = create<RevealCardsState & RevealCardsAction>(
           }
         }
       },
+    },
+
+  )
+);
+
+
+export const useExpandedCardsStore = create<ExpandedCardState & ExpandedCardAction>()(
+  persist(
+    (set) => ({
+      expandedCardIds: [],
+      toggleExpandedCard: (id) =>
+        set((state) => ({
+          expandedCardIds: state.expandedCardIds.includes(id)
+            ? state.expandedCardIds.filter((cardId) => cardId !== id)
+            : [...state.expandedCardIds, id],
+        })),
+    }),
+    {
+      name: "expanded-cards-id-storage"
     }
   )
 );

@@ -1,8 +1,8 @@
 import { FC } from "react";
 import { ListItem } from "../api/getListData";
+import { useExpandedCardsStore, useStore } from "../store";
 import { DeleteButton, ExpandButton } from "./Buttons";
 import { ChevronDownIcon, ChevronUpIcon } from "./icons";
-import { useStore, useRevealCardsStore } from "../store";
 
 type CardProps = {
   id: ListItem["id"];
@@ -11,14 +11,21 @@ type CardProps = {
   isRevealCard?: boolean;
 };
 
-export const Card: FC<CardProps> = ({ id, title, description, isRevealCard = false }) => {
-  const { expandedCardIds, toggleCard, deleteCard} = useStore();
+export const Card: FC<CardProps> = ({
+  id,
+  title,
+  description,
+  isRevealCard = false,
+}) => {
+  const { deleteCard } = useStore();
+
+  const { expandedCardIds, toggleExpandedCard } = useExpandedCardsStore();
 
   const isExpanded = expandedCardIds.includes(id);
 
   const deleteCardOnClick = (id: ListItem["id"]) => {
-    deleteCard(id)
-  }
+    deleteCard(id);
+  };
 
   return (
     <div className={`rounded px-3 py-2 custom-box-shadow w-full max-w-[400px]`}>
@@ -27,11 +34,11 @@ export const Card: FC<CardProps> = ({ id, title, description, isRevealCard = fal
 
         {!isRevealCard && (
           <div className="flex items-center gap-1">
-            <ExpandButton onClick={() => toggleCard(id)}>
+            <ExpandButton onClick={() => toggleExpandedCard(id)}>
               {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
             </ExpandButton>
 
-            <DeleteButton onClick={() => deleteCardOnClick(id) } />
+            <DeleteButton onClick={() => deleteCardOnClick(id)} />
           </div>
         )}
       </div>

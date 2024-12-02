@@ -1,5 +1,3 @@
-import React from "react";
-
 interface ToggleButtonProps {
   className: string;
   buttonText: string;

@@ -14,12 +14,6 @@ export const CardListActionsSection = () => {
           <Card key={id} id={id} title={title} isRevealCard={true} />
         ))}
       </div>
-
-      <div className="flex flex-col gap-y-3">
-        {/* {deletedCards.map((card) => (
-            <Card key={card.id} card={card} />
-          ))} */}
-      </div>
     </div>
   );
 };
