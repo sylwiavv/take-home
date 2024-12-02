@@ -5,18 +5,16 @@ import { ListItem } from "./api/getListData";
 
 type State = {
   cards: ListItem[];
-  expandedCardIds: number[];
-  deletedCardsIds: number[];
+  expandedCardIds: ListItem["id"][];
+  deletedCardsIds: ListItem["id"][];
   deletedCards: Omit<ListItem, "isVisible" | "description">[];
-  // revealCards: Omit<ListItem, "isVisible" | "description">[];
 };
 
 type Actions = {
   setList: (list: ListItem[]) => void;
-  toggleCard: (id: number) => void;
-  // deleteCard: (id:ListItem['id']) => void;
-  deleteCard: (id: number) => void;
-  // setRevealCards: (cards: Omit<ListItem, "isVisible" | "description">[]) => void
+  toggleCard: (id: ListItem["id"]) => void;
+  deleteCard: (id: ListItem["id"]) => void;
+  setDeletedCardsIds: (id:ListItem["id"][]) => void
 };
 
 type RevealCardsState = {
@@ -57,14 +55,18 @@ export const useStore = create<State & Actions>((set) => ({
 
         deletedCardsIds: [...state.deletedCardsIds, id],
       };
-    })
+    }),
+
+  setDeletedCardsIds: (cardListItemsId) =>
+    set((state) => ({
+      deletedCardsIds: [...cardListItemsId, ...state.deletedCardsIds]
+    }))
 }));
 
 export const useRevealCardsStore = create<RevealCardsState & RevealCardsAction>()(
   persist(
     (set) => ({
       revealCards: [],
-
       setRevealCards: (newCards) =>
         set((state) => {
           const uniqueCards = newCards.filter(
@@ -77,7 +79,18 @@ export const useRevealCardsStore = create<RevealCardsState & RevealCardsAction>(
         }),
     }),
     {
-      name: "reveal-cards-storage"
+      name: "reveal-cards-storage",
+
+      onRehydrateStorage: () => (persistedState, error) => {
+        if (error) {
+          throw new Error(`Rehydration error: ${error instanceof Error ? error.message : String(error)}`);
+        } else {
+          if (persistedState?.revealCards) {
+            const deletedCardsIds = persistedState.revealCards.map((card) => card.id);
+            useStore.getState().setDeletedCardsIds([...deletedCardsIds]);
+          }
+        }
+      },
     }
   )
 );

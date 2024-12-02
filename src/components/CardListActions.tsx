@@ -3,13 +3,13 @@ import { useStore, useRevealCardsStore } from "../store";
 
 export const CardListActions = () => {
   const { deletedCardsIds, deletedCards } = useStore((state) => state);
-  const { revealCards, setRevealCards } = useRevealCardsStore((state) => state);
+  const { setRevealCards } = useRevealCardsStore((state) => state);
 
   return (
     <>
       <div className="flex items-center justify-between">
         <p className="mb-1 font-medium text-lg">
-          Deleted Cards ({revealCards.length})
+          Deleted Cards ({deletedCardsIds.length})
         </p>
 
         <div className="flex items-center justify-between gap-2">

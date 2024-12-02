@@ -2,19 +2,23 @@ import { FC } from "react";
 import { ListItem } from "../api/getListData";
 import { DeleteButton, ExpandButton } from "./Buttons";
 import { ChevronDownIcon, ChevronUpIcon } from "./icons";
-import { useStore } from "../store";
+import { useStore, useRevealCardsStore } from "../store";
 
 type CardProps = {
-  id?: ListItem["id"];
+  id: ListItem["id"];
   title: ListItem["title"];
   description?: ListItem["description"];
   isRevealCard?: boolean;
 };
 
 export const Card: FC<CardProps> = ({ id, title, description, isRevealCard = false }) => {
-  const { expandedCardIds, toggleCard, deleteCard } = useStore();
+  const { expandedCardIds, toggleCard, deleteCard} = useStore();
 
   const isExpanded = expandedCardIds.includes(id);
+
+  const deleteCardOnClick = (id: ListItem["id"]) => {
+    deleteCard(id)
+  }
 
   return (
     <div className={`rounded px-3 py-2 custom-box-shadow w-full max-w-[400px]`}>
@@ -27,11 +31,11 @@ export const Card: FC<CardProps> = ({ id, title, description, isRevealCard = fal
               {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
             </ExpandButton>
 
-            <DeleteButton onClick={() => deleteCard(id)} />
+            <DeleteButton onClick={() => deleteCardOnClick(id) } />
           </div>
         )}
       </div>
-      {isExpanded && <p className={`mt-1.5`}>{description}</p>}{" "}
+      {isExpanded && <p className={`mt-1.5`}>{description}</p>}
     </div>
   );
 };
