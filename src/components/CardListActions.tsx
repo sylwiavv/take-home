@@ -4,8 +4,8 @@ import { useGetListData } from "../api/getListData";
 import { ListItem } from "../api/getListData";
 
 export const CardListActions = () => {
-  const { deletedCardsIds, deletedCards, refreshState, cards } = useStore((state) => state);
-  const { setRevealCards } = useRevealCardsStore((state) => state);
+  const { deletedCardsIds, deletedCards, refreshState } = useStore((state) => state);
+  const { setRevealCards, resetRevealCards } = useRevealCardsStore((state) => state);
   const { resetExpandedCards} = useExpandedCardsStore()
   const { data: cardsList } = useGetListData();
 
@@ -13,6 +13,7 @@ export const CardListActions = () => {
     refreshState(cardsList as ListItem[]);
 
     resetExpandedCards();
+    resetRevealCards();
   };  
     return (
     <>

@@ -29,6 +29,7 @@ export const Card: FC<CardProps> = ({
 
   return (
     <div className={`rounded px-3 py-2 custom-box-shadow w-full max-w-[400px]`}>
+      {id}
       <div className="flex justify-between">
         <h2 className="font-large font-semibold mr-2">{title}</h2>
 

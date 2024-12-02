@@ -14,8 +14,8 @@ type State = {
 type Actions = {
   setList: (list: ListItem[]) => void;
   deleteCard: (id: ListItem["id"]) => void;
-  setDeletedCardsIds: (id: ListItem["id"][]) => void
-  refreshState: (newCards: ListItem[]) => void
+  setDeletedCardsIds: (id: ListItem["id"][]) => void;
+  refreshState: (newCards: ListItem[]) => void;
 };
 
 type RevealCardsState = {
@@ -23,7 +23,8 @@ type RevealCardsState = {
 }
 
 type RevealCardsAction = {
-  setRevealCards: (cards: Omit<ListItem, "isVisible" | "description">[]) => void
+  setRevealCards: (cards: Omit<ListItem, "isVisible" | "description">[]) => void;
+  resetRevealCards: () => void;
 }
 
 type ExpandedCardState = {
@@ -32,7 +33,7 @@ type ExpandedCardState = {
 
 type ExpandedCardAction = {
   toggleExpandedCard: (id: ListItem["id"]) => void;
-  resetExpandedCards: () => void
+  resetExpandedCards: () => void;
 };
 
 
@@ -74,6 +75,7 @@ export const useStore = create<State & Actions>((set) => ({
         cards: newCards,
         deletedCardsIds: [],
         expandedCardIds: [],
+        deletedCards: [],
         revealCards: []
       }
     }),
@@ -88,14 +90,16 @@ export const useRevealCardsStore = create<RevealCardsState & RevealCardsAction>(
           const uniqueCards = newCards.filter(
             (newCard) => !state.revealCards.some((existingCard) => existingCard.id === newCard.id)
           );
-
+          
+          console.log(state.revealCards);
           return {
             revealCards: [...state.revealCards, ...uniqueCards],
           };
         }),
+        resetRevealCards: () => set(() => ({ revealCards: [] })),
     }),
     {
-      name: RevealCardsStorage,
+      name: "reveal-cards-storage",
 
       onRehydrateStorage: () => (persistedState, error) => {
         if (error) {
